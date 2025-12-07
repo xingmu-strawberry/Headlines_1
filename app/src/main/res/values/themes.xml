@@ -1,0 +1,31 @@
+<!-- res/values/themes.xml -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Headlines" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- 自定义主题 -->
+        <!-- 主色调 -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryVariant">@color/color_primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- 确保背景为白色 -->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:statusBarColor">@color/color_primary</item>
+        <item name="android:navigationBarColor">@color/white</item>
+
+        <!-- 移除启动屏效果 -->
+        <item name="android:windowSplashScreenAnimatedIcon" tools:ignore="NewApi">@null</item>
+        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">@color/white</item>
+
+        <!-- 避免过度绘制 -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
+
+    <!-- 夜间模式主题 -->
+    <style name="Theme.Headlines.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>

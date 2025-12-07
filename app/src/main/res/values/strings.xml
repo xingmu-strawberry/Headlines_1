@@ -1,0 +1,17 @@
+<!-- res/values/strings.xml -->
+<resources>
+    <string name="app_name">今日头条</string>
+    <string name="search_hint">习近平主席重要论述｜乌拉圭队或重</string>
+    <string name="search_button">搜索</string>
+    <string name="ai_answer">AI 回答</string>
+    <string name="weather_info">北京 多云</string>
+    <string name="air_quality">空气质量良</string>
+
+    <!-- Tab标签 -->
+    <string name="tab_follow">关注</string>
+    <string name="tab_recommend">推荐</string>
+    <string name="tab_hot">热榜</string>
+    <string name="tab_new_era">新时代</string>
+    <string name="tab_novel">小说</string>
+    <string name="tab_video">视频</string>
+</resources>

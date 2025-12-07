@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- 左侧文字区域 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingRight="12dp">
+
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="我国已有近320公里高铁常态化按350公里高标运营"
+            android:textSize="16sp"
+            android:textColor="#333333"
+            android:textStyle="bold"
+            android:lineSpacingExtra="2dp"
+            android:maxLines="3"
+            android:ellipsize="end" />
+
+        <!-- 附加信息栏 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvSource"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="新华社"
+                android:textSize="12sp"
+                android:textColor="#999999" />
+
+            <TextView
+                android:id="@+id/tvComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1024评论"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginLeft="12dp" />
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6小时前"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginLeft="12dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 右侧视频预览 -->
+    <RelativeLayout
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:background="#333333">
+
+        <!-- 视频封面 -->
+        <ImageView
+            android:id="@+id/ivVideoCover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_media_play" />
+
+        <!-- 播放按钮 -->
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerInParent="true"
+            android:src="@android:drawable/ic_media_play"
+            android:alpha="0.8"
+            app:tint="#FFFFFF" />
+
+        <!-- 视频时长 -->
+        <TextView
+            android:id="@+id/tvDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="4dp"
+            android:text="02:54"
+            android:textSize="10sp"
+            android:textColor="#FFFFFF"
+            android:background="#88000000"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="2dp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

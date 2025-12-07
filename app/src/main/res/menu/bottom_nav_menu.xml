@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:title="首页"
+        android:icon="@drawable/ic_home"
+        android:checkable="true" />
+
+    <item
+        android:id="@+id/nav_video"
+        android:title="视频"
+        android:icon="@drawable/ic_video"
+        android:checkable="true" />
+
+    <item
+        android:id="@+id/nav_search"
+        android:title="搜索"
+        android:icon="@drawable/ic_search"
+        android:checkable="true" />
+
+    <item
+        android:id="@+id/nav_task"
+        android:title="任务"
+        android:icon="@drawable/ic_task"
+        android:checkable="true" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:title="我的"
+        android:icon="@drawable/ic_profile"
+        android:checkable="true" />
+
+
+</menu>

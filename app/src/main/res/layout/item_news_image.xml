@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- 左侧文字区域 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingRight="12dp">
+
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="这档社交观察类综艺火了，桃花坞是如何做到的"
+            android:textSize="16sp"
+            android:textColor="#333333"
+            android:textStyle="bold"
+            android:lineSpacingExtra="2dp"
+            android:maxLines="3"
+            android:ellipsize="end" />
+
+        <!-- 附加信息栏 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- 来源 -->
+            <TextView
+                android:id="@+id/tvSource"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="娱乐周刊"
+                android:textSize="12sp"
+                android:textColor="#999999" />
+
+            <!-- 评论数 -->
+            <TextView
+                android:id="@+id/tvComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="256评论"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginLeft="12dp" />
+
+            <!-- 时间 -->
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4小时前"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginLeft="12dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 右侧图片 -->
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        android:background="#EEEEEE"
+        android:src="@android:drawable/ic_menu_gallery" />
+
+</LinearLayout>

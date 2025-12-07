@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- 标题 -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="习近平主席关于中非合作重要论述"
+        android:textSize="16sp"
+        android:textColor="#333333"
+        android:textStyle="bold"
+        android:lineSpacingExtra="2dp"
+        android:maxLines="2"
+        android:ellipsize="end" />
+
+    <!-- 附加信息栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- 置顶标签 -->
+        <TextView
+            android:id="@+id/tvTopTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="置顶"
+            android:textSize="10sp"
+            android:textColor="#FFFFFF"
+            android:background="#FF5722"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="1dp"
+            android:visibility="gone" />
+
+        <!-- 来源和评论 -->
+        <TextView
+            android:id="@+id/tvSource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="海外网 30评论"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:layout_marginLeft="8dp" />
+
+        <!-- 时间 -->
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2小时前"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:layout_marginLeft="12dp" />
+
+        <!-- 填充 -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- 更多按钮 -->
+        <ImageView
+            android:id="@+id/ivMore"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@android:drawable/ic_menu_more"
+            app:tint="#999999" />
+
+    </LinearLayout>
+
+</LinearLayout>

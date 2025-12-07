@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <!-- 应用栏布局 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <!-- 自定义状态栏（模拟天气栏） -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#FF3D00"
+            android:paddingHorizontal="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:elevation="2dp">
+
+            <!-- 左侧整体：图标 + 温度 + 右侧上下文本 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- 天气图标（圆形） -->
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@android:drawable/ic_menu_compass"
+                    android:background="@drawable/circle_bg"
+                    app:tint="#FF3D00" />
+
+                <!-- 温度 -->
+                <TextView
+                    android:id="@+id/tvTemperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="14°"
+                    android:textSize="22sp"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="8dp" />
+
+                <!-- 紧挨着温度的右侧：上下排列的城市天气和空气质量 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="4dp">
+
+                    <!-- 第一行：城市 + 天气 -->
+                    <TextView
+                        android:id="@+id/tvCityWeather"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="北京 多云"
+                        android:textSize="12sp"
+                        android:textColor="#FFFFFF" />
+
+                    <!-- 第二行：空气质量 -->
+                    <TextView
+                        android:id="@+id/tvAirQuality"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="空气质量良"
+                        android:textSize="10sp"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginTop="1dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- 中间空白填充 -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- 右侧：AI回答按钮 + 加号按钮 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- AI回答按钮 -->
+                <Button
+                    android:id="@+id/btnAiAnswer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="AI 回答"
+                    android:textSize="12sp"
+                    android:backgroundTint="#2196F3"
+                    android:textColor="#FFFFFF"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="0dp" />
+
+                <!-- 加号按钮 -->
+                <ImageView
+                    android:id="@+id/ivAdd"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@android:drawable/ic_menu_add"
+                    android:layout_marginLeft="12dp"
+                    app:tint="#2196F3" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- 搜索栏 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#FF3D00"
+            android:paddingHorizontal="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:elevation="1dp">
+
+            <!-- 搜索输入框 -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="习近平主席重要论述｜乌拉圭队或重"
+                app:boxStrokeColor="#FFFFFF"
+                app:hintTextColor="#FFFFFF"
+                app:boxBackgroundColor="#FFFFFF" >
+
+                <!-- 这里需要添加ID -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textColor="#FFFFFF" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- 搜索按钮 - 确保有ID -->
+            <Button
+                android:id="@+id/btnSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="搜索"
+                android:layout_marginLeft="12dp"
+                android:backgroundTint="#FFFFFF"
+                android:textColor="#FF3D00" />
+
+        </LinearLayout>
+
+        <!-- TabLayout -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#FFFFFF"
+            app:tabIndicatorColor="#FF3D00"
+            app:tabSelectedTextColor="#FF3D00"
+            app:tabTextColor="#666666"
+            app:tabMode="scrollable"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="3dp"
+            app:tabPaddingStart="16dp"
+            app:tabPaddingEnd="16dp" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- 主内容区域 -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- ViewPager2 显示不同标签页 -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- 底部导航 -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom"
+        android:background="#FFFFFF"
+        android:elevation="8dp"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextAppearanceActive="@style/BottomNavigationActive"
+        app:itemTextAppearanceInactive="@style/BottomNavigationInactive"
+        app:labelVisibilityMode="labeled" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
