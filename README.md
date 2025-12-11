@@ -49,7 +49,7 @@ text
 4. 运行应用: 连接设备或使用模拟器，点击运行
 
 ## 📸 截图
-
+8
 | 主界面                                                    | 新闻列表 | 下拉刷新 |
 |--------------------------------------------------------|----------|----------|
 | ![主界面](E:\Udesk\AndroidStudioProjects\Headlines_3\gradle\screenshots\main_interface.png) | ![新闻列表](screenshots/news_list.png) | ![下拉刷新](screenshots/refresh.gif) |

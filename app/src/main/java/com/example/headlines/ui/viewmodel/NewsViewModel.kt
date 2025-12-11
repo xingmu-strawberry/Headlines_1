@@ -1,39 +1,49 @@
 package com.example.headlines.ui.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.headlines.data.model.News
 import com.example.headlines.data.repository.NewsRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.headlines.data.model.News
 import kotlinx.coroutines.launch
 
 class NewsViewModel : ViewModel() {
+
     private val repository = NewsRepository()
 
-    private val _newsList = MutableStateFlow<List<News>>(emptyList())
-    val newsList: StateFlow<List<News>> = _newsList
+    private val _newsList = MutableLiveData<List<News>>()
+    val newsList: LiveData<List<News>> = _newsList
 
-    private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.IDLE)
-    val loadingState: StateFlow<LoadingState> = _loadingState
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
 
-    fun loadNews(refresh: Boolean = false) {
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
+
+    private var currentCategory = "推荐"
+
+    fun fetchNews(category: String = currentCategory) {
+        currentCategory = category
+        _isLoading.value = true
+        _errorMessage.value = null
+
         viewModelScope.launch {
-            _loadingState.value = LoadingState.LOADING
-            try {
-                val news = repository.getNews(refresh)
-                _newsList.value = if (refresh) news else _newsList.value + news
-                _loadingState.value = LoadingState.SUCCESS
-            } catch (e: Exception) {
-                _loadingState.value = LoadingState.ERROR(e.message ?: "加载失败")
+            val result = repository.getNewsByCategory(category)
+
+            if (result.isSuccess) {
+                _newsList.value = result.getOrNull() ?: emptyList()
+            } else {
+                _errorMessage.value = result.exceptionOrNull()?.message ?: "未知错误"
+                // 发生错误时清空列表，显示空状态
+                _newsList.value = emptyList()
             }
+
+            _isLoading.value = false
         }
     }
-}
 
-sealed class LoadingState {
-    object IDLE : LoadingState()
-    object LOADING : LoadingState()
-    object SUCCESS : LoadingState()
-    data class ERROR(val message: String) : LoadingState()
+    fun refreshNews() {
+        fetchNews(currentCategory)
+    }
 }

@@ -26,9 +26,12 @@ class ViewPagerAdapter(fragmentActivity: FragmentActivity) :
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        // 确保每个Fragment有唯一ID
+        return position.toLong()
+    }
+
     fun getTabTitle(position: Int): String {
         return tabTitles[position]
     }
-
-
 }

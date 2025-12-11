@@ -1,9 +1,9 @@
-
 package com.example.headlines
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.headlines.data.remote.RetrofitClient
 import com.example.headlines.databinding.ActivityMainBinding
 import com.example.headlines.ui.adapters.ViewPagerAdapter
 import com.example.headlines.ui.fragments.NewsFragment
@@ -16,12 +16,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 1. 初始化Retrofit（必须先于setContentView）
+        RetrofitClient.init()
+
+        // 2. 设置您的API密钥（第一次运行需要设置）
+        // RetrofitClient.saveApiKey(applicationContext, "YOUR_JUHE_API_KEY_HERE")
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupViewPagerAndTabs()
         setupBottomNavigation()
-        setupRefreshLayout()  // 调用外部的函数
+        setupRefreshLayout()
         setupClickListeners()
     }
 
@@ -76,19 +83,25 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.selectedItemId = R.id.nav_home
     }
 
-    // 独立的 setupRefreshLayout 函数（不能放在 setupClickListeners 内部）
+    // 独立的 setupRefreshLayout 函数
     private fun setupRefreshLayout() {
         // 设置下拉刷新
         binding.swipeRefreshLayout.setOnRefreshListener {
             // 获取当前Fragment并刷新数据
             val currentFragment = supportFragmentManager.findFragmentByTag("f${binding.viewPager.currentItem}")
             if (currentFragment is NewsFragment) {
-                currentFragment.refreshData()
+                // 设置刷新回调
                 currentFragment.setOnRefreshListener(object : NewsFragment.OnRefreshListener {
                     override fun onRefreshComplete() {
+                        // Fragment通知刷新完成后，停止刷新指示器
                         binding.swipeRefreshLayout.isRefreshing = false
+                        // 清除回调，避免内存泄漏
+                        currentFragment.setOnRefreshListener(null)
                     }
                 })
+
+                // 触发刷新
+                currentFragment.refreshData()
             } else {
                 // 如果没有找到Fragment，直接停止刷新
                 binding.swipeRefreshLayout.isRefreshing = false
@@ -127,9 +140,5 @@ class MainActivity : AppCompatActivity() {
                 android.widget.Toast.makeText(this, "请输入搜索内容", android.widget.Toast.LENGTH_SHORT).show()
             }
         }
-        // 注意：这里不再有 setupRefreshLayout 函数定义
     }
 }
-
-
-
