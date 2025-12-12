@@ -9,7 +9,9 @@ import com.example.headlines.data.model.Task
 import com.example.headlines.databinding.ActivityTaskBinding
 import com.example.headlines.ui.adapters.TaskAdapter
 import com.example.headlines.R
+import com.example.headlines.data.model.TaskHistory
 import java.util.Date
+import java.util.UUID
 
 class TaskActivity : AppCompatActivity() {
 
@@ -45,13 +47,35 @@ class TaskActivity : AppCompatActivity() {
 
         // 设置任务点击事件
         taskAdapter.setOnTaskClickListener { task ->
+            if (task.completed) {
+                android.widget.Toast.makeText(this, "该任务已完成", android.widget.Toast.LENGTH_SHORT).show()
+                return@setOnTaskClickListener
+            }
+
             when (task.id) {
                 "daily_signin" -> performDailySignIn()
-                "read_news" -> navigateToNews()
-                "share_news" -> shareNews()
-                "comment_news" -> commentOnNews()
-                "watch_video" -> navigateToVideo()
-                "invite_friend" -> inviteFriend()
+                "read_news" -> {
+                    navigateToNews()
+                    // 阅读文章只更新进度，不立即完成任务
+                    updateTaskProgress(task.id)
+                }
+                "share_news" -> {
+                    shareNews()
+                    completeTask(task.id, task.title, task.points)
+                }
+                "comment_news" -> {
+                    commentOnNews()
+                    completeTask(task.id, task.title, task.points)
+                }
+                "watch_video" -> {
+                    navigateToVideo()
+                    // 观看视频只更新进度
+                    updateTaskProgress(task.id)
+                }
+                "invite_friend" -> {
+                    inviteFriend()
+                    completeTask(task.id, task.title, task.points)
+                }
             }
         }
     }
@@ -144,9 +168,10 @@ class TaskActivity : AppCompatActivity() {
             android.widget.Toast.makeText(this, "积分兑换功能开发中", android.widget.Toast.LENGTH_SHORT).show()
         }
 
+        // 添加任务历史按钮点击监听
         binding.btnTaskHistory.setOnClickListener {
-            // 查看任务历史
-            android.widget.Toast.makeText(this, "任务记录功能开发中", android.widget.Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, TaskHistoryActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -195,6 +220,18 @@ class TaskActivity : AppCompatActivity() {
         updateUserInfo()
 
         android.widget.Toast.makeText(this, "签到成功！获得50积分，连续签到${consecutiveDays}天", android.widget.Toast.LENGTH_SHORT).show()
+
+        // 在签到成功后添加历史记录
+        TaskHistoryActivity.addHistoryRecord(this,
+            TaskHistory(
+                id = UUID.randomUUID().toString(),
+                type = TaskHistory.Type.SIGN_IN,
+                title = "每日签到",
+                description = "连续签到第${consecutiveDays}天",
+                points = 50,
+                timestamp = System.currentTimeMillis()
+            )
+        )
     }
 
     private fun updateUserInfo() {
@@ -241,4 +278,100 @@ class TaskActivity : AppCompatActivity() {
         shareIntent.putExtra(Intent.EXTRA_TEXT, "快来使用今日头条APP，这里有最新最热的新闻资讯！下载链接：https://headlines.example.com")
         startActivity(Intent.createChooser(shareIntent, "邀请好友"))
     }
+
+    private fun completeTask(taskId: String, taskTitle: String, points: Int) {
+        // 1. 增加总积分
+        val sharedPref = getSharedPreferences("task_prefs", MODE_PRIVATE)
+        val currentPoints = sharedPref.getInt("total_points", 0)
+        val newPoints = currentPoints + points
+
+        sharedPref.edit()
+            .putInt("total_points", newPoints)
+            .apply()
+
+        // 2. 更新任务完成状态（在任务列表中标记为完成）
+        val taskIndex = taskList.indexOfFirst { it.id == taskId }
+        if (taskIndex != -1) {
+            val task = taskList[taskIndex]
+            taskList[taskIndex] = task.copy(
+                completed = true,
+                progress = task.total  // 设置进度为完成
+            )
+            taskAdapter.notifyItemChanged(taskIndex)
+
+            // 更新今日任务完成数显示
+            updateUserInfo()
+        }
+
+        // 3. 记录任务完成历史
+        TaskHistoryActivity.addHistoryRecord(this,
+            TaskHistory(
+                id = UUID.randomUUID().toString(),
+                type = TaskHistory.Type.TASK_COMPLETE,
+                title = taskTitle,
+                description = "完成任务获得积分",
+                points = points,
+                timestamp = System.currentTimeMillis()
+            )
+        )
+
+        // 4. 显示积分获取提示
+        android.widget.Toast.makeText(this, "完成任务！获得${points}积分", android.widget.Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updateTaskProgress(taskId: String) {
+        val taskIndex = taskList.indexOfFirst { it.id == taskId }
+        if (taskIndex != -1) {
+            val task = taskList[taskIndex]
+            val newProgress = task.progress + 1
+
+            if (newProgress <= task.total) {
+                // 更新进度
+                taskList[taskIndex] = task.copy(progress = newProgress)
+
+                // 检查是否完成任务
+                if (newProgress == task.total) {
+                    // 完成任务，增加积分
+                    completeTask(taskId, task.title, task.points)
+                } else {
+                    // 只更新进度
+                    taskAdapter.notifyItemChanged(taskIndex)
+                    android.widget.Toast.makeText(this, "进度更新：${newProgress}/${task.total}", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun resetDailyTasks() {
+        val sharedPref = getSharedPreferences("task_prefs", MODE_PRIVATE)
+        val lastResetDay = sharedPref.getInt("last_reset_day", -1)
+        val today = Date().date
+
+        if (lastResetDay != today) {
+            // 重置每日任务
+            for (i in taskList.indices) {
+                val task = taskList[i]
+                if (task.type == Task.Type.DAILY) {
+                    taskList[i] = task.copy(
+                        completed = false,
+                        progress = 0
+                    )
+                }
+            }
+            taskAdapter.notifyDataSetChanged()
+
+            // 保存重置日期
+            sharedPref.edit()
+                .putInt("last_reset_day", today)
+                .apply()
+        }
+    }
+
+    // 在 onCreate 或 onResume 中调用
+    override fun onResume() {
+        super.onResume()
+        resetDailyTasks()
+        updateUserInfo()
+    }
+
 }
