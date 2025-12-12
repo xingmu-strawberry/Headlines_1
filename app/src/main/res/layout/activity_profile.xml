@@ -47,7 +47,7 @@
                         android:id="@+id/iv_user_avatar"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@android:drawable/ic_menu_gallery"
+                        android:src="@drawable/ic_ice"
                         app:civ_border_width="2dp"
                         app:civ_border_color="@color/white" />
 
@@ -63,7 +63,7 @@
                             android:id="@+id/tv_user_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="头条用户"
+                            android:text="xingmu-strawberry"
                             android:textSize="@dimen/text_size_xlarge"
                             android:textColor="@color/white"
                             android:textStyle="bold" />
@@ -93,7 +93,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:paddingHorizontal="16dp" >
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -119,6 +120,13 @@
 
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="24dp"
+                        android:layout_marginHorizontal="12dp"
+                        android:background="@color/white"
+                        android:alpha="0.3" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -143,6 +151,13 @@
 
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="24dp"
+                        android:layout_marginHorizontal="12dp"
+                        android:background="@color/white"
+                        android:alpha="0.3" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -166,6 +181,13 @@
                             android:textColor="@color/white" />
 
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="24dp"
+                        android:layout_marginHorizontal="12dp"
+                        android:background="@color/white"
+                        android:alpha="0.3" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -419,7 +441,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="联系方式：contact@toutiao.com"
+                        android:text="联系方式：https://github.com/xingmu-strawberry"
                         android:textSize="@dimen/text_size_small"
                         android:textColor="@color/text_secondary" />
 

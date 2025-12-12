@@ -152,6 +152,12 @@
         android:name="com.google.firebase.messaging.default_notification_color"
         android:resource="@color/color_primary" /> -->
 
+        <!-- 添加 TaskActivity 注册 -->
+        <activity
+            android:name=".ui.activities.TaskActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Headlines" />
 </application>
 
     </manifest>

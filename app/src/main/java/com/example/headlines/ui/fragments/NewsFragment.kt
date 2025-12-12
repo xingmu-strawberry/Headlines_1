@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.headlines.data.model.News
-import com.example.headlines.data.model.NewsType
 import com.example.headlines.databinding.FragmentNewsBinding
 import com.example.headlines.ui.activities.NewsDetailActivity
 import com.example.headlines.ui.adapters.NewsAdapter
 import com.example.headlines.ui.viewmodel.NewsViewModel
+import kotlinx.coroutines.launch
 
 class NewsFragment : Fragment() {
 
@@ -77,30 +77,30 @@ class NewsFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
+        // 设置新闻点击监听 - 这里要处理跳转
         adapter.setOnNewsClickListener { news ->
-            // 跳转到新闻详情页，传递新闻的各个字段
-            val intent = Intent(requireContext(), NewsDetailActivity::class.java).apply {
-                putExtra("news_id", news.id)
-                putExtra("news_title", news.title)
-                putExtra("news_content", news.content)
-                putExtra("news_type", news.type.name)  // 注意：枚举转字符串
-                putExtra("news_source", news.source)
-                putExtra("news_comment_count", news.commentCount)
-                putExtra("news_publish_time", news.publishTime)
-                putExtra("news_image_url", news.imageUrl)
-                putExtra("news_image_url_2", news.imageUrl2) // <-- 修正
-                putExtra("news_image_url_3", news.imageUrl3) // <-- 修正
-                putExtra("news_video_url", news.videoUrl)
-                putExtra("news_video_duration", news.videoDuration)
-                putExtra("news_is_top", news.isTop)
-            }
-            startActivity(intent)
+            // 跳转到新闻详情页
+            openNewsDetail(news)
         }
+    }
+
+    private fun openNewsDetail(news: com.example.headlines.data.model.News) {
+        val intent = Intent(requireContext(), NewsDetailActivity::class.java).apply {
+            putExtra("news_title", news.title)
+            putExtra("news_source", news.source)
+            putExtra("news_time", news.publishTime)
+            putExtra("news_comment_count", news.commentCount)
+            putExtra("news_image_url", news.imageUrl)
+            putExtra("news_type", news.type.name)
+            putExtra("news_id", news.id)
+            // 可以添加更多信息
+        }
+        startActivity(intent)
     }
 
     private fun setupObservers() {
         viewModel.newsList.observe(viewLifecycleOwner) { newsList ->
-            adapter.submitList(newsList?.toMutableList())
+            adapter.submitList(newsList)
 
             // 更新UI状态
             binding.progressBar.visibility = View.GONE
@@ -145,5 +145,4 @@ class NewsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

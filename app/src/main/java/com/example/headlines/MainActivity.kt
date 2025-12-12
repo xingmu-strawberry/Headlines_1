@@ -5,10 +5,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.headlines.data.model.News
+import com.example.headlines.data.remote.RetrofitClient
 import com.example.headlines.databinding.ActivityMainBinding
 import com.example.headlines.ui.activities.NewsDetailActivity
 import com.example.headlines.ui.activities.ProfileActivity
 import com.example.headlines.ui.activities.SearchActivity
+import com.example.headlines.ui.activities.TaskActivity
 import com.example.headlines.ui.adapters.ViewPagerAdapter
 import com.example.headlines.ui.fragments.NewsFragment
 import com.google.android.material.tabs.TabLayoutMediator
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         //  初始化Retrofit（必须先于setContentView）
-        // RetrofitClient.init()
+        RetrofitClient.init()
 
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -79,15 +81,19 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_task -> {
-                    // 任务：暂时显示推荐页
-                    binding.viewPager.currentItem = 1
+                    // 跳转到任务页面
+                    val intent = Intent(this, TaskActivity::class.java)
+                    startActivity(intent)
+
+                    // 保持当前选中状态不变
+                    binding.bottomNavigationView.selectedItemId = R.id.nav_home
                     true
                 }
                 R.id.nav_profile -> {
                     // 我的：暂时显示推荐页
                     binding.viewPager.currentItem = 1
 
-                    // 新增功能：跳转到个人资料页面
+                    // 文件5的新增功能：跳转到个人资料页面
                     val intent = Intent(this, ProfileActivity::class.java)
                     startActivity(intent)
 
@@ -162,7 +168,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-/*
     // 在 MainActivity.kt 中添加
     private fun openNewsDetail(news: News) {
         val intent = Intent(this, NewsDetailActivity::class.java).apply {
@@ -174,8 +179,6 @@ class MainActivity : AppCompatActivity() {
         }
         startActivity(intent)
     }
-
- */
 
     private fun openSearchActivity() {
         val intent = Intent(this, SearchActivity::class.java)

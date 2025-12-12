@@ -14,28 +14,30 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <!-- 自定义状态栏（模拟天气栏） -->
+
+        <!-- 搜索栏 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="#FF3D00"
-            android:paddingHorizontal="12dp"
+            android:elevation="2dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:elevation="2dp">
+            android:paddingHorizontal="12dp">
 
             <!-- 左侧整体：图标 + 温度 + 右侧上下文本 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <!-- 天气图标（圆形） -->
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@android:drawable/ic_menu_compass"
                     android:background="@drawable/circle_bg"
+                    android:src="@android:drawable/ic_menu_compass"
                     app:tint="#FF3D00" />
 
                 <!-- 温度 -->
@@ -43,18 +45,18 @@
                     android:id="@+id/tvTemperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
                     android:text="14°"
-                    android:textSize="22sp"
                     android:textColor="#FFFFFF"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="8dp" />
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
                 <!-- 紧挨着温度的右侧：上下排列的城市天气和空气质量 -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginLeft="4dp">
+                    android:layout_marginLeft="4dp"
+                    android:orientation="vertical">
 
                     <!-- 第一行：城市 + 天气 -->
                     <TextView
@@ -62,18 +64,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="北京 多云"
-                        android:textSize="12sp"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp" />
 
                     <!-- 第二行：空气质量 -->
                     <TextView
                         android:id="@+id/tvAirQuality"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
                         android:text="空气质量良"
-                        android:textSize="10sp"
                         android:textColor="#FFFFFF"
-                        android:layout_marginTop="1dp" />
+                        android:textSize="10sp" />
 
                 </LinearLayout>
 
@@ -89,41 +91,34 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <!-- AI回答按钮 -->
                 <Button
                     android:id="@+id/btnAiAnswer"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
+                    android:background="@drawable/button_border"
+                    android:gravity="center"
                     android:text="AI 回答"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
-                    android:backgroundTint="#FF3000"
                     android:textColor="#FFFFFF"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="0dp"
+                    android:textSize="12sp" />
 
-                    app:strokeWidth="1dp"
-                    app:strokeColor="#FFFFFF"
-                    app:cornerRadius="4dp"
-                    />
 
                 <!-- 加号按钮 -->
                 <ImageView
                     android:id="@+id/ivAdd"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:src="@android:drawable/ic_menu_add"
                     android:layout_marginLeft="12dp"
+                    android:src="@android:drawable/ic_menu_add"
                     app:tint="#2196F3" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- 搜索栏 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -136,7 +131,7 @@
             <!-- 搜索输入框 -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="42dp"
+                android:layout_height="45dp"
                 android:layout_weight="1"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="习近平主席重要论述｜乌拉圭队或重"
@@ -158,7 +153,7 @@
             <Button
                 android:id="@+id/btnSearch"
                 android:layout_width="wrap_content"
-                android:layout_height="42dp"
+                android:layout_height="45dp"
                 android:text="搜索"
                 android:layout_marginLeft="12dp"
                 android:backgroundTint="#FFFFFF"

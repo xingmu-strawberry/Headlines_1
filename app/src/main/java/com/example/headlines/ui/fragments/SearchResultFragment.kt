@@ -76,7 +76,7 @@ class SearchResultFragment : Fragment() {
             else -> getAllResults()
         }
 
-        adapter.submitList(results?.toMutableList())
+        adapter.submitList(results)
 
         // 更新UI状态
         if (results.isEmpty()) {

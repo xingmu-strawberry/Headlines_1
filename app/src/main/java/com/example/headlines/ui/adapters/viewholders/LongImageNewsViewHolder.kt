@@ -12,21 +12,15 @@ class LongImageNewsViewHolder(private val binding: ItemNewsLongImageBinding) :
     fun bind(news: News) {
         binding.tvTitle.text = news.title
 
-        // 使用虚拟图片URL（示例图片）
-        val imageUrls = listOf(
-            "https://picsum.photos/300/200?random=1",
-            "https://picsum.photos/300/200?random=2",
-            "https://picsum.photos/300/200?random=3"
-        )
-
-        val imageViews = listOf(binding.ivImage1, binding.ivImage2, binding.ivImage3)
-
-        imageViews.forEachIndexed { index, imageView ->
-            // 总是加载虚拟图片（即使News没有图片数据）
+        // 加载长图
+        news.imageUrl?.let { url ->
             Glide.with(binding.root.context)
-                .load(imageUrls[index])
+                .load(url)
                 .apply(RequestOptions().centerCrop())
-                .into(imageView)
+                .into(binding.ivLongImage)
+        } ?: run {
+            // 如果没有URL，使用默认图片
+            binding.ivLongImage.setImageResource(android.R.drawable.ic_menu_camera)
         }
     }
 }

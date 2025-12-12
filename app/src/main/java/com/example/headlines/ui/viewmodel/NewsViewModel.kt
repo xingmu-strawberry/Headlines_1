@@ -98,9 +98,7 @@ class NewsViewModel : ViewModel() {
                 source = "互联网快讯",
                 commentCount = 892,
                 publishTime = "1小时前",
-                imageUrl = "https://picsum.photos/400/600?random=11",   // 第一张图片
-                imageUrl2 = "https://picsum.photos/400/600?random=12",  // 第二张图片
-                imageUrl3 = "https://picsum.photos/400/600?random=13"   // 第三张图片
+                imageUrl = "https://picsum.photos/400/600?random=11" // 长图比例
             ),
             News(
                 id = 18,
@@ -110,9 +108,7 @@ class NewsViewModel : ViewModel() {
                 source = "科技前沿",
                 commentCount = 567,
                 publishTime = "4小时前",
-                imageUrl = "https://picsum.photos/400/800?random=14",   // 第一张图片
-                imageUrl2 = "https://picsum.photos/400/800?random=15",  // 第二张图片
-                imageUrl3 = "https://picsum.photos/400/800?random=16"   // 第三张图片
+                imageUrl = "https://picsum.photos/400/800?random=12" // 更长的图片
             )
         )
     }
