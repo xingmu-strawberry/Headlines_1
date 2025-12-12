@@ -2,8 +2,8 @@ package com.example.headlines.ui.adapters.viewholders
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.example.headlines.databinding.ItemNewsTextBinding
 import com.example.headlines.data.model.News
+import com.example.headlines.databinding.ItemNewsTextBinding
 
 class TextNewsViewHolder(private val binding: ItemNewsTextBinding) :
     RecyclerView.ViewHolder(binding.root) {

@@ -2,11 +2,9 @@ package com.example.headlines.ui.adapters.viewholders
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop  // 添加这行
 import com.bumptech.glide.request.RequestOptions
-import com.example.headlines.R  // 添加这行
-import com.example.headlines.databinding.ItemNewsLongImageBinding
 import com.example.headlines.data.model.News
+import com.example.headlines.databinding.ItemNewsLongImageBinding
 
 class LongImageNewsViewHolder(private val binding: ItemNewsLongImageBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -14,20 +12,21 @@ class LongImageNewsViewHolder(private val binding: ItemNewsLongImageBinding) :
     fun bind(news: News) {
         binding.tvTitle.text = news.title
 
-        // 创建请求选项
-        val requestOptions = RequestOptions()
-            .transform(CenterCrop())  // 使用 CenterCrop 变换
-            .placeholder(R.drawable.ic_image_placeholder)
+        // 使用虚拟图片URL（示例图片）
+        val imageUrls = listOf(
+            "https://picsum.photos/300/200?random=1",
+            "https://picsum.photos/300/200?random=2",
+            "https://picsum.photos/300/200?random=3"
+        )
 
-        // 加载长图
-        news.imageUrl?.let { url ->
+        val imageViews = listOf(binding.ivImage1, binding.ivImage2, binding.ivImage3)
+
+        imageViews.forEachIndexed { index, imageView ->
+            // 总是加载虚拟图片（即使News没有图片数据）
             Glide.with(binding.root.context)
-                .load(url)
-                .apply(requestOptions)  // 应用选项
-                .into(binding.ivLongImage)
-        } ?: run {
-            // 如果没有URL，使用默认图片
-            binding.ivLongImage.setImageResource(android.R.drawable.ic_menu_camera)
+                .load(imageUrls[index])
+                .apply(RequestOptions().centerCrop())
+                .into(imageView)
         }
     }
 }

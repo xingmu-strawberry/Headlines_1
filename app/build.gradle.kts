@@ -53,13 +53,11 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        dataBinding = true
     }
 }
 
 dependencies {
-    // 保持您的依赖不变，但建议移除重复的依赖项。
-    // 我已经简化了重复的依赖项，并保留了最新的版本号。
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -69,9 +67,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // ----------------------------------------------------
-    // 以下为手动添加的依赖项，已去除 libs.xx 重复项
-    // ----------------------------------------------------
 
     // 核心 UI 组件
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
@@ -106,4 +101,6 @@ dependencies {
 
     // Fragment KTX
     implementation("androidx.fragment:fragment-ktx:1.6.2")
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }

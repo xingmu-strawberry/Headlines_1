@@ -1,0 +1,34 @@
+{
+  "news": [
+    {
+      "id": "1",
+      "title": "中国新能源汽车出口量跃居全球第一",
+      "content": "今年以来，我国新能源汽车出口持续增长，首次成为全球新能源汽车出口第一大国...",
+      "source": "新华社",
+      "publishTime": "2024-01-15 10:30",
+      "imageUrl": "https://picsum.photos/400/300?random=1",
+      "commentCount": 342,
+      "type": "IMAGE"
+    },
+    {
+      "id": "2",
+      "title": "全国多地迎来新一轮降雪天气",
+      "content": "中央气象台预报，受冷空气影响，华北、东北等地将迎来大范围降雪...",
+      "source": "央视新闻",
+      "publishTime": "2024-01-15 09:15",
+      "imageUrl": "",
+      "commentCount": 128,
+      "type": "TEXT"
+    },
+    {
+      "id": "3",
+      "title": "人工智能助力医疗诊断新突破",
+      "content": "国内科研团队研发出新型AI医疗诊断系统，准确率达98%...",
+      "source": "科技日报",
+      "publishTime": "2024-01-14 16:20",
+      "imageUrl": "https://picsum.photos/400/300?random=2",
+      "commentCount": 256,
+      "type": "IMAGE"
+    }
+  ]
+}

@@ -15,19 +15,143 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Headlines"
-        android:usesCleartextTraffic="true"> <!-- 允许HTTP请求 -->
+        android:usesCleartextTraffic="true"
+        tools:targetApi="33"> <!-- 允许HTTP请求 -->
 
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Headlines"
-            android:windowSoftInputMode="adjustResize" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+    <!-- 主Activity -->
+    <activity
+        android:name=".MainActivity"
+        android:exported="true"
+        android:theme="@style/Theme.Headlines"
+        android:windowSoftInputMode="adjustResize"
+        android:launchMode="singleTop"
+        android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
 
-</manifest>
+        <!-- 添加Intent过滤器，支持新闻链接 -->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="http" />
+            <data android:scheme="https" />
+            <data android:host="toutiao.com" /> <!-- 示例域名 -->
+            <data android:host="*.toutiao.com" />
+        </intent-filter>
+
+        <!-- 可选：支持分享文本到应用 -->
+        <intent-filter>
+            <action android:name="android.intent.action.SEND" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:mimeType="text/plain" />
+        </intent-filter>
+
+    </activity>
+
+    <!-- 新闻详情页Activity -->
+    <activity
+        android:name=".ui.activities.NewsDetailActivity"
+        android:exported="false"
+        android:theme="@style/Theme.Headlines.NoActionBar"
+        android:parentActivityName=".MainActivity"
+        android:windowSoftInputMode="adjustPan">
+
+        <!-- 设置父Activity -->
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
+    </activity>
+
+    <!-- 搜索页Activity -->
+    <activity
+        android:name=".ui.activities.SearchActivity"
+        android:exported="false"
+        android:theme="@style/Theme.Headlines.NoActionBar"
+        android:parentActivityName=".MainActivity"
+        android:windowSoftInputMode="adjustPan">
+
+        <!-- 设置父Activity -->
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
+    </activity>
+
+    <!-- 用户个人中心Activity -->
+    <activity
+        android:name=".ui.activities.ProfileActivity"
+        android:exported="false"
+        android:theme="@style/Theme.Headlines.NoActionBar"
+        android:parentActivityName=".MainActivity">
+
+        <!-- 设置父Activity -->
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
+    </activity>
+
+    <!-- 设置页Activity -->
+    <activity
+        android:name=".ui.activities.SettingsActivity"
+        android:exported="false"
+        android:theme="@style/Theme.Headlines"
+        android:parentActivityName=".MainActivity">
+
+        <!-- 设置父Activity -->
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
+    </activity>
+
+    <!-- 可选：文件提供者（如果需要分享图片等功能） -->
+    <!--
+    <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="${applicationId}.fileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+    </provider>
+    -->
+
+    <!-- 深色模式兼容 -->
+    <meta-data
+        android:name="android.app.force_dark"
+        android:value="auto" />
+
+    <!-- 导航栏颜色 -->
+    <meta-data
+        android:name="androidx.appcompat.app.NAVIGATION_BAR_COLOR"
+        android:resource="@color/white" />
+
+    <!-- 应用兼容性配置 -->
+    <meta-data
+        android:name="android.max_aspect"
+        android:value="2.1" />
+
+    <!-- 适配全面屏 -->
+    <meta-data
+        android:name="android.notch_support"
+        android:value="true" />
+
+    <!-- Google AdMob 配置（如果需要） -->
+    <!-- <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-xxxxxxxxxxxxxxxx~xxxxxxxxxx" /> -->
+
+    <!-- Firebase 配置（如果需要） -->
+    <!-- <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@drawable/ic_notification" />
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_color"
+        android:resource="@color/color_primary" /> -->
+
+</application>
+
+    </manifest>

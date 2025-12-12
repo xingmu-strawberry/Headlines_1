@@ -1,17 +1,48 @@
-<!-- res/values/strings.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">今日头条</string>
-    <string name="search_hint">习近平主席重要论述｜乌拉圭队或重</string>
-    <string name="search_button">搜索</string>
-    <string name="ai_answer">AI 回答</string>
-    <string name="weather_info">北京 多云</string>
-    <string name="air_quality">空气质量良</string>
 
-    <!-- Tab标签 -->
+    <!-- 底部导航 -->
+    <string name="nav_home">首页</string>
+    <string name="nav_video">视频</string>
+    <string name="nav_search">搜索</string>
+    <string name="nav_task">任务</string>
+    <string name="nav_profile">我的</string>
+
+    <!-- 顶部标签 -->
     <string name="tab_follow">关注</string>
     <string name="tab_recommend">推荐</string>
     <string name="tab_hot">热榜</string>
     <string name="tab_new_era">新时代</string>
     <string name="tab_novel">小说</string>
     <string name="tab_video">视频</string>
+
+    <!-- 按钮文本 -->
+    <string name="ai_answer">AI 回答</string>
+    <string name="search">搜索</string>
+    <string name="search_hint">习近平主席重要论述｜乌拉圭队或重</string>
+    <string name="publish">发布</string>
+    <string name="refresh">刷新</string>
+    <string name="load_more">加载更多</string>
+
+    <!-- 状态文本 -->
+    <string name="no_content">暂无内容</string>
+    <string name="loading">加载中...</string>
+    <string name="load_failed">加载失败</string>
+    <string name="network_error">网络连接失败，请检查网络</string>
+
+    <!-- 天气信息 -->
+    <string name="temperature">14°</string>
+    <string name="city_weather">北京 多云</string>
+    <string name="air_quality">空气质量良</string>
+
+    <!-- 操作菜单 -->
+    <string name="share">分享</string>
+    <string name="collect">收藏</string>
+    <string name="report">举报</string>
+    <string name="not_interested">不感兴趣</string>
+
+    <string name="back">返回</string>
+    <string name="like">喜欢</string>
+    <string name="comment">评论</string>
 </resources>

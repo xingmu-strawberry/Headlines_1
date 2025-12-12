@@ -1,3 +1,4 @@
+/*
 package com.example.headlines.data.mapper
 
 import com.example.headlines.data.model.ApiNewsItem
@@ -14,6 +15,7 @@ object NewsMapper {
         return News(
             id = apiNews.uniqueKey.hashCode(),
             title = apiNews.title,
+            content = getNewsContent(apiNews),  // 新增：添加content参数
             type = determineNewsType(apiNews),
             source = apiNews.authorName.ifEmpty { "未知来源" },
             commentCount = 0, // 聚合数据API不提供评论数
@@ -25,6 +27,16 @@ object NewsMapper {
         )
     }
 
+    // 新增：获取新闻内容的辅助函数
+    private fun getNewsContent(apiNews: ApiNewsItem): String {
+        // 根据API返回的数据结构，选择合适的内容字段
+        return when {
+            apiNews.content.isNullOrEmpty() -> apiNews.content
+            apiNews.description.isNullOrEmpty() -> apiNews.description
+            apiNews.summary.isNullOrEmpty() -> apiNews.summary
+            else -> "点击查看详情"  // 默认内容
+        }
+    }
     private fun determineNewsType(apiNews: ApiNewsItem): NewsType {
         // 根据图片数量判断新闻类型
         val imageUrls = listOfNotNull(
@@ -67,3 +79,5 @@ object NewsMapper {
         }
     }
 }
+
+ */

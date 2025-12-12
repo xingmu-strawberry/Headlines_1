@@ -98,11 +98,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:text="AI 回答"
+                    android:textStyle="bold"
                     android:textSize="12sp"
-                    android:backgroundTint="#2196F3"
+                    android:backgroundTint="#FF3000"
                     android:textColor="#FFFFFF"
                     android:paddingHorizontal="12dp"
-                    android:paddingVertical="0dp" />
+                    android:paddingVertical="0dp"
+
+                    app:strokeWidth="1dp"
+                    app:strokeColor="#FFFFFF"
+                    app:cornerRadius="4dp"
+                    />
 
                 <!-- 加号按钮 -->
                 <ImageView
@@ -130,7 +136,7 @@
             <!-- 搜索输入框 -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="42dp"
                 android:layout_weight="1"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="习近平主席重要论述｜乌拉圭队或重"
@@ -144,7 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="#000000" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -152,7 +158,7 @@
             <Button
                 android:id="@+id/btnSearch"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="42dp"
                 android:text="搜索"
                 android:layout_marginLeft="12dp"
                 android:backgroundTint="#FFFFFF"

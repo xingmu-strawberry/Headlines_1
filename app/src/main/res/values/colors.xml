@@ -25,4 +25,6 @@
     <color name="md_theme_light_primaryContainer">#EADDFF</color>
     <color name="md_theme_light_onPrimaryContainer">#21005D</color>
 
+    <color name="color_secondary_dark">#F57C00</color>
+    <color name="divider">#E0E0E0</color>
 </resources>

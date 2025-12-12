@@ -1,10 +1,14 @@
 package com.example.headlines
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.headlines.data.remote.RetrofitClient
+import com.example.headlines.data.model.News
 import com.example.headlines.databinding.ActivityMainBinding
+import com.example.headlines.ui.activities.NewsDetailActivity
+import com.example.headlines.ui.activities.ProfileActivity
+import com.example.headlines.ui.activities.SearchActivity
 import com.example.headlines.ui.adapters.ViewPagerAdapter
 import com.example.headlines.ui.fragments.NewsFragment
 import com.google.android.material.tabs.TabLayoutMediator
@@ -17,11 +21,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. 初始化Retrofit（必须先于setContentView）
-        RetrofitClient.init()
+        //  初始化Retrofit（必须先于setContentView）
+        // RetrofitClient.init()
 
-        // 2. 设置您的API密钥（第一次运行需要设置）
-        // RetrofitClient.saveApiKey(applicationContext, "YOUR_JUHE_API_KEY_HERE")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -53,6 +55,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home -> {
                     // 首页：滚动到顶部并显示推荐标签
                     binding.viewPager.currentItem = 1 // 推荐标签
+
+                    // 文件2的首页功能：滚动到顶部
+                    binding.appBarLayout.setExpanded(true, true)
+
                     true
                 }
                 R.id.nav_video -> {
@@ -63,6 +69,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_search -> {
                     // 搜索：滚动到搜索栏位置
                     binding.appBarLayout.setExpanded(true, true)
+
+                    // 文件5的新增功能：跳转到搜索页面
+                    val intent = Intent(this, SearchActivity::class.java)
+                    startActivity(intent)
+
+                    // 保持当前选中状态不变
+                    binding.bottomNavigationView.selectedItemId = R.id.nav_home
                     true
                 }
                 R.id.nav_task -> {
@@ -73,6 +86,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_profile -> {
                     // 我的：暂时显示推荐页
                     binding.viewPager.currentItem = 1
+
+                    // 新增功能：跳转到个人资料页面
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
+
+                    // 保持当前选中状态不变
+                    binding.bottomNavigationView.selectedItemId = R.id.nav_home
                     true
                 }
                 else -> false
@@ -140,5 +160,30 @@ class MainActivity : AppCompatActivity() {
                 android.widget.Toast.makeText(this, "请输入搜索内容", android.widget.Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+/*
+    // 在 MainActivity.kt 中添加
+    private fun openNewsDetail(news: News) {
+        val intent = Intent(this, NewsDetailActivity::class.java).apply {
+            putExtra("news_title", news.title)
+            putExtra("news_source", news.source)
+            putExtra("news_time", news.publishTime)
+            putExtra("news_comment_count", news.commentCount)
+            putExtra("news_image_url", news.imageUrl)
+        }
+        startActivity(intent)
+    }
+
+ */
+
+    private fun openSearchActivity() {
+        val intent = Intent(this, SearchActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun openProfileActivity() {
+        val intent = Intent(this, ProfileActivity::class.java)
+        startActivity(intent)
     }
 }
