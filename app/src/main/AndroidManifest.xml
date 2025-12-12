@@ -52,20 +52,6 @@
 
     </activity>
 
-    <!-- 新闻详情页Activity -->
-    <activity
-        android:name=".ui.activities.NewsDetailActivity"
-        android:exported="false"
-        android:theme="@style/Theme.Headlines.NoActionBar"
-        android:parentActivityName=".MainActivity"
-        android:windowSoftInputMode="adjustPan">
-
-        <!-- 设置父Activity -->
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity" />
-    </activity>
-
     <!-- 搜索页Activity -->
     <activity
         android:name=".ui.activities.SearchActivity"
@@ -163,6 +149,11 @@
             android:name=".ui.activities.TaskHistoryActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+        <!-- 新增NewsDetailActivity -->
+        <activity
+            android:name=".ui.activities.NewsDetailActivity"
+            android:theme="@style/Theme.Headlines" />
 </application>
 
     </manifest>

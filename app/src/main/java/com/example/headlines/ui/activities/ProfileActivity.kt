@@ -30,7 +30,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setupUserData() {
         // 模拟用户数据
-        binding.tvUserName.text = "头条用户"
+        binding.tvUserName.text = "xingmu-strawberry"
         binding.tvUserId.text = "ID: 123456789"
         binding.tvFollowCount.text = "128"
         binding.tvFansCount.text = "2.5K"

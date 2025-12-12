@@ -38,6 +38,8 @@ class NewsAdapter : ListAdapter<News, RecyclerView.ViewHolder>(NewsDiffCallback(
         }
     }
 
+
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val news = getItem(position)
 
