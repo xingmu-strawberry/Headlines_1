@@ -8,7 +8,7 @@ enum class NewsDetailType {
 }
 
 data class NewsDetail(
-    val id: String,
+    val id: Int,
     val type: NewsDetailType,
     val title: String,
     val author: String,

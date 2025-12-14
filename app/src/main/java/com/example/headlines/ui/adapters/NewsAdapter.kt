@@ -39,10 +39,11 @@ class NewsAdapter : ListAdapter<News, RecyclerView.ViewHolder>(NewsDiffCallback(
     }
 
 
-
+    // 绑定数据
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val news = getItem(position)
 
+        // 根据ViewHolder类型调用不同的bind方法
         when (holder) {
             is TextNewsViewHolder -> holder.bind(news)
             is ImageNewsViewHolder -> holder.bind(news)
@@ -50,13 +51,14 @@ class NewsAdapter : ListAdapter<News, RecyclerView.ViewHolder>(NewsDiffCallback(
             is LongImageNewsViewHolder -> holder.bind(news)
         }
 
+        // 设置点击事件
         holder.itemView.setOnClickListener {
             itemClickListener?.invoke(news)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return getItem(position).type.ordinal
+        return getItem(position).type.ordinal // 返回NewsType的序号
     }
 
     // 修改方法名，避免冲突
@@ -67,10 +69,10 @@ class NewsAdapter : ListAdapter<News, RecyclerView.ViewHolder>(NewsDiffCallback(
 
 class NewsDiffCallback : DiffUtil.ItemCallback<News>() {
     override fun areItemsTheSame(oldItem: News, newItem: News): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.id == newItem.id // ID相同表示是同一个item
     }
 
     override fun areContentsTheSame(oldItem: News, newItem: News): Boolean {
-        return oldItem == newItem
+        return oldItem == newItem // 内容是否完全相同
     }
 }

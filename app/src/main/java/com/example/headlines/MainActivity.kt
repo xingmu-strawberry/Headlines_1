@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_search -> {
                     // 搜索：滚动到搜索栏位置
-                    binding.appBarLayout.setExpanded(true, true)
+                    // binding.appBarLayout.setExpanded(true, true)
 
                     // 文件5的新增功能：跳转到搜索页面
                     val intent = Intent(this, SearchActivity::class.java)
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_profile -> {
                     // 我的：暂时显示推荐页
-                    binding.viewPager.currentItem = 1
+                    // binding.viewPager.currentItem = 1
 
                     // 文件5的新增功能：跳转到个人资料页面
                     val intent = Intent(this, ProfileActivity::class.java)
@@ -156,15 +156,24 @@ class MainActivity : AppCompatActivity() {
             android.widget.Toast.makeText(this, "发布功能开发中", android.widget.Toast.LENGTH_SHORT).show()
         }
 
+        // 搜索框点击
+        val searchEditText =
+            binding.root.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editTextSearch)
         // 搜索按钮点击
         val searchButton = binding.root.findViewById<android.widget.Button>(R.id.btnSearch)
+
+        // 点击搜索框时跳转
+        searchEditText?.setOnClickListener {
+            // 直接跳转到搜索页面
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+        }
+
+        // 点击搜索按钮时也跳转
         searchButton?.setOnClickListener {
-            val searchText = binding.root.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editTextSearch)?.text.toString()
-            if (searchText.isNotEmpty()) {
-                android.widget.Toast.makeText(this, "搜索: $searchText", android.widget.Toast.LENGTH_SHORT).show()
-            } else {
-                android.widget.Toast.makeText(this, "请输入搜索内容", android.widget.Toast.LENGTH_SHORT).show()
-            }
+            // 同样跳转到搜索页面
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
         }
     }
 

@@ -4,35 +4,47 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.headlines.R
 import com.example.headlines.databinding.FragmentNewsDetailBinding
-import com.example.headlines.ui.adapters.DetailAdapter
+import com.example.headlines.ui.adapter.NewsDetailAdapter
 import com.example.headlines.ui.viewmodel.NewsDetailViewModel
+import kotlinx.coroutines.launch
 
 class NewsDetailFragment : Fragment() {
 
     private var _binding: FragmentNewsDetailBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: NewsDetailViewModel
-    private lateinit var detailAdapter: DetailAdapter
+
+    private val viewModel: NewsDetailViewModel by viewModels()
+    private lateinit var adapter: NewsDetailAdapter
+
+    private var newsId: Int = -1
+    private var newsTitle: String = "新闻详情"
 
     companion object {
-        private const val ARG_NEWS_ID = "news_id"
-        private const val ARG_NEWS_TYPE = "news_type"
+        private const val ARG_NEWS_ID = "arg_news_id"
+        private const val ARG_NEWS_TITLE = "arg_news_title"
 
-        fun newInstance(newsId: String, type: String): NewsDetailFragment {
-            val fragment = NewsDetailFragment()
-            val args = Bundle().apply {
-                putString(ARG_NEWS_ID, newsId)
-                putString(ARG_NEWS_TYPE, type)
+        fun newInstance(newsId: Int, newsTitle: String = "新闻详情"): NewsDetailFragment {
+            return NewsDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_NEWS_ID, newsId)
+                    putString(ARG_NEWS_TITLE, newsTitle)
+                }
             }
-            fragment.arguments = args
-            return fragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        arguments?.let {
+            newsId = it.getInt(ARG_NEWS_ID, -1)
+            newsTitle = it.getString(ARG_NEWS_TITLE, "新闻详情")
         }
     }
 
@@ -48,131 +60,85 @@ class NewsDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val newsId = arguments?.getString(ARG_NEWS_ID) ?: ""
-        val newsType = arguments?.getString(ARG_NEWS_TYPE) ?: "TEXT"
-
-        // 初始化ViewModel
-        viewModel = ViewModelProvider(this).get(NewsDetailViewModel::class.java)
-
-        // 初始化UI
-        setupToolbar()
-        setupRecyclerView()
-        setupSwipeRefresh()
-
-        // 加载数据
-        viewModel.loadNewsDetail(newsId, newsType)
-
-        // 观察数据变化
-        observeViewModel()
-
-        // 设置错误重试按钮
-        binding.buttonRetry.setOnClickListener {
-            viewModel.loadNewsDetail(newsId, newsType)
-        }
+        initView()
+        initViewModel()
+        loadData()
     }
 
-    private fun setupToolbar() {
-        binding.toolbar.apply {
-            navigationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_back)
-            setNavigationOnClickListener {
-                requireActivity().onBackPressed()
-            }
-
-            // 设置菜单
-            inflateMenu(R.menu.detail_menu)
-            setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.action_share -> {
-                        shareNews()
-                        true
-                    }
-                    R.id.action_comment -> {
-                        showCommentDialog()
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }
-    }
-
-    private fun setupRecyclerView() {
-        detailAdapter = DetailAdapter()
+    private fun initView() {
+        // 初始化RecyclerView
+        adapter = NewsDetailAdapter()
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = detailAdapter
-            setHasFixedSize(true)
+            adapter = this@NewsDetailFragment.adapter
+        }
+
+        // 设置Toolbar
+        binding.toolbar.title = newsTitle
+        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
+        // 设置下拉刷新
+        binding.swipeRefresh.setOnRefreshListener {
+            loadData()
+        }
+
+        // 设置重试按钮
+        binding.buttonRetry.setOnClickListener {
+            loadData()
         }
     }
 
-    private fun setupSwipeRefresh() {
-        binding.swipeRefresh.apply {
-            setColorSchemeColors(
-                ContextCompat.getColor(requireContext(), R.color.color_primary)
-            )
-            setOnRefreshListener {
-                viewModel.refresh()
-            }
-        }
-    }
-
-    private fun observeViewModel() {
-        viewModel.newsDetail.observe(viewLifecycleOwner) { detail ->
-            detail?.let {
-                // 更新适配器数据
-                detailAdapter.submitDetail(detail)
-
-                // 更新UI状态
-                showContentView()
-            }
-        }
-
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.swipeRefresh.isRefreshing = isLoading
-
-            if (isLoading) {
-                binding.progressBar.visibility = View.VISIBLE
-                binding.errorLayout.visibility = View.GONE
-                binding.recyclerView.visibility = View.GONE
-            } else {
+    private fun initViewModel() {
+        // 观察新闻详情数据
+        viewModel.newsDetail.observe(viewLifecycleOwner) { newsDetail ->
+            newsDetail?.let {
+                // 更新UI
+                binding.swipeRefresh.isRefreshing = false
                 binding.progressBar.visibility = View.GONE
+                binding.recyclerView.visibility = View.VISIBLE
+                binding.errorLayout.visibility = View.GONE
+
+                // 更新适配器数据
+                adapter.submitData(it)
+
+                // 更新Toolbar标题为实际新闻标题
+                binding.toolbar.title = it.title
             }
         }
 
-        viewModel.error.observe(viewLifecycleOwner) { error ->
-            error?.let {
-                showErrorView(it)
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+        // 观察加载状态
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading && viewModel.newsDetail.value == null) {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.recyclerView.visibility = View.GONE
+                binding.errorLayout.visibility = View.GONE
+            }
+        }
+
+        // 观察错误信息
+        viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                binding.swipeRefresh.isRefreshing = false
+                binding.progressBar.visibility = View.GONE
+                binding.recyclerView.visibility = View.GONE
+                binding.errorLayout.visibility = View.VISIBLE
+                binding.textErrorMessage.text = it
             }
         }
     }
 
-    private fun showContentView() {
-        binding.recyclerView.visibility = View.VISIBLE
-        binding.errorLayout.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
-    }
-
-    private fun showErrorView(errorMessage: String) {
-        binding.recyclerView.visibility = View.GONE
-        binding.errorLayout.visibility = View.VISIBLE
-        binding.textErrorMessage.text = errorMessage
-    }
-
-    private fun shareNews() {
-        val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(android.content.Intent.EXTRA_TEXT, "分享一条新闻给你：${viewModel.newsDetail.value?.title}")
+    private fun loadData() {
+        if (newsId != -1) {
+            viewModel.loadNewsDetail(newsId)
         }
-        startActivity(android.content.Intent.createChooser(shareIntent, "分享到"))
-    }
-
-    private fun showCommentDialog() {
-        Toast.makeText(requireContext(), "评论功能开发中...", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        viewModel.clearState()
     }
 }

@@ -14,8 +14,6 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <!-- 自定义状态栏（模拟天气栏） -->
-
-        <!-- 搜索栏 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="56dp"

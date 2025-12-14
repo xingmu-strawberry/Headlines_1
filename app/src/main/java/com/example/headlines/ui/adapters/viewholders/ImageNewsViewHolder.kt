@@ -17,7 +17,7 @@ class ImageNewsViewHolder(private val binding: ItemNewsImageBinding) :
 
         // 加载图片
         news.imageUrl?.let { url ->
-            Glide.with(binding.root.context)
+            Glide.with(binding.root.context)  // 1. 获取上下文
                 .load(url)
                 .apply(RequestOptions().centerCrop())
                 .into(binding.ivImage)
