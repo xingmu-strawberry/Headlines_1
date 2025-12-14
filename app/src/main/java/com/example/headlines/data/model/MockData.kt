@@ -1,10 +1,25 @@
 package com.example.headlines.data.model
 
+import kotlin.random.Random
+
+// 辅助函数：将 NewsType 映射到 NewsDetailType
+fun NewsType.toDetailType(): NewsDetailType {
+    return when (this) {
+        NewsType.TEXT -> NewsDetailType.TEXT
+        NewsType.IMAGE -> NewsDetailType.IMAGE
+        NewsType.VIDEO -> NewsDetailType.VIDEO
+        NewsType.LONG_IMAGE -> NewsDetailType.LONG_IMAGE
+    }
+}
+
 object MockData {
-    // 保存首页新闻列表与详情页的映射关系
+    // 保存首页新闻列表与详情页的映射关系 (只用于静态 ID 1-8)
     private val newsIdToDetailMap = mutableMapOf<Int, NewsDetail>()
 
-    // 首页新闻列表数据 - 与NewsViewModel中的逻辑保持一致
+    // 用于生成随机数的对象 (用于静态辅助函数)
+    private val random = Random(System.currentTimeMillis())
+
+    // 首页新闻列表数据 (静态 ID 1-8)
     val newsList = listOf(
         createMockNews(id = 1, type = NewsType.TEXT, isTop = true),
         createMockNews(id = 2, type = NewsType.TEXT, isTop = true),
@@ -17,201 +32,229 @@ object MockData {
     )
 
     init {
-        // 初始化时将首页新闻映射到对应的详情
+        // 初始化时将静态首页新闻映射到对应的详情
         initializeDetailMap()
     }
 
     private fun initializeDetailMap() {
-        // 为每个首页新闻创建对应的详情
+        // 为每个首页新闻创建对应的详情 (注意：这里创建的是原始静态详情，不涉及动态 ID)
         newsList.forEach { news ->
-            when (news.type) {
-                NewsType.TEXT -> {
-                    newsIdToDetailMap[news.id] = createMockTextDetail(news.id)
-                }
-                NewsType.IMAGE -> {
-                    newsIdToDetailMap[news.id] = createMockImageDetail(news.id)
-                }
-                NewsType.VIDEO -> {
-                    newsIdToDetailMap[news.id] = createMockVideoDetail(news.id)
-                }
-                NewsType.LONG_IMAGE -> {
-                    newsIdToDetailMap[news.id] = createMockLongImageDetail(news.id)
-                }
-            }
+            newsIdToDetailMap[news.id] = createNewsDetail(news.id, news)
         }
     }
+
+    // 统一的详情创建入口
+    private fun createNewsDetail(id: Int, news: News): NewsDetail {
+        return when (news.type) {
+            NewsType.TEXT -> createMockTextDetail(id, news)
+            NewsType.IMAGE -> createMockImageDetail(id, news)
+            NewsType.VIDEO -> createMockVideoDetail(id, news)
+            NewsType.LONG_IMAGE -> createMockLongImageDetail(id, news)
+        }
+    }
+
+    // =========================================================================
+    // 核心修正函数：支持动态 ID 查找
+    // =========================================================================
 
     // 根据新闻ID获取对应的新闻详情
     fun getNewsDetailById(id: Int): NewsDetail? {
-        return newsIdToDetailMap[id]
-    }
-
-    // 创建首页新闻的辅助函数
-    private fun createMockNews(id: Int, type: NewsType, isTop: Boolean): News {
-        val newsTemplates = getNewsTemplates()
-        val templateIndex = id % newsTemplates.size
-        val (title, source, content) = newsTemplates[templateIndex]
-
-        return when (type) {
-            NewsType.TEXT -> News(
-                id = id,
-                title = getTextTitle(title, id),
-                content = getTextContent(content, id),
-                type = type,
-                source = source,
-                commentCount = getCommentCount(id),
-                publishTime = getPublishTime(id),
-                isTop = isTop
-            )
-
-            NewsType.IMAGE -> News(
-                id = id,
-                title = "【图文】$title",
-                content = "$content，详情请查看图片。",
-                type = type,
-                source = source,
-                commentCount = getCommentCount(id),
-                publishTime = getPublishTime(id),
-                imageUrl = getImageUrl(type, id),
-                isTop = isTop
-            )
-
-            NewsType.VIDEO -> News(
-                id = id,
-                title = "【视频】$title",
-                content = "$content，点击观看详细视频报道。",
-                type = type,
-                source = source,
-                commentCount = getCommentCount(id),
-                publishTime = getPublishTime(id),
-                imageUrl = getImageUrl(type, id),
-                videoUrl = "https://example.com/video${id % 5 + 1}.mp4",
-                videoDuration = "${id % 4 + 1}:${String.format("%02d", id * 10 % 60)}",
-                isTop = isTop
-            )
-
-            NewsType.LONG_IMAGE -> News(
-                id = id,
-                title = "【长图】$title",
-                content = "$content，一图看懂完整内容。",
-                type = type,
-                source = source,
-                commentCount = getCommentCount(id),
-                publishTime = getPublishTime(id),
-                imageUrl = getImageUrl(type, id),
-                isTop = isTop
-            )
+        // 1. 尝试从已初始化的静态 map 中获取 (用于 ID 1-8)
+        if (newsIdToDetailMap.containsKey(id)) {
+            return newsIdToDetailMap[id]
         }
+
+        // 2. 🚨 处理动态 ID (如 303, 206, 107)
+        if (id > 100) {
+            val order = id % 100
+            val refreshCount = id / 100
+
+            // 排除无效的 order (order 必须在 1 到 8 之间)
+            if (order < 1 || order > 8) return null
+
+            // 3. 确定新闻类型 (根据 NewsViewModel 的 getMixedNews 逻辑确定)
+            val newsType = when (order) {
+                in 1..5 -> NewsType.TEXT
+                6 -> NewsType.IMAGE
+                7 -> NewsType.VIDEO
+                8 -> NewsType.LONG_IMAGE
+                else -> return null
+            }
+
+            // 4. 动态生成 News 对象 (使用复制过来的函数，确保数据一致性)
+            val dynamicNews = createNewsWithOrder(
+                order = order,
+                refreshCount = refreshCount,
+                type = newsType,
+                isTop = false
+            )
+
+            // 5. 调用修正后的详情创建函数
+            return createNewsDetail(id, dynamicNews)
+        }
+
+        return null
     }
 
-    // 以下是原有的详情页创建函数，现在会根据ID生成对应的详情
-    private fun createMockTextDetail(id: Int): NewsDetail {
-        // 获取对应的首页新闻数据
-        val news = newsList.firstOrNull { it.id == id }
+    // =========================================================================
+    // 修正后的详情创建函数 (接受 News 对象)
+    // =========================================================================
 
+    private fun createMockTextDetail(id: Int, news: News): NewsDetail {
         return NewsDetail(
             id = id,
-            type = NewsDetailType.TEXT,
-            title = news?.title ?: "深度分析：人工智能对未来就业的影响",
+            type = news.type.toDetailType(),
+            title = news.title,
             author = getAuthorName(id),
             authorAvatar = getAuthorAvatar(id),
-            publishTime = System.currentTimeMillis() - (id * 86400000L), // 按ID生成不同时间
+            publishTime = System.currentTimeMillis() - (id * 86400000L),
             viewCount = 10000 + id * 100,
-            commentCount = 300 + id * 20,
+            commentCount = news.commentCount, // 使用动态生成的评论数
             likeCount = 800 + id * 30,
             content = """
-                ## ${news?.title ?: "AI时代：机遇与挑战并存"}
-
+                ## ${news.title}
+                
                 随着人工智能技术的飞速发展，关于AI对就业市场影响的讨论日益热烈。本文将从多个角度分析AI技术可能带来的就业变革。
+                
+                ### 1. 核心内容
+                ${news.content}
 
-                ### 1. AI将替代部分重复性工作
-
+                ### 2. 拓展阅读
                 在制造业、客服、数据录入等领域，AI已经展现出强大的替代能力。据统计，全球约有30%的工作岗位面临自动化风险。
 
                 - 制造业：智能机器人将替代流水线工人
                 - 客服行业：智能客服系统24小时在线
                 - 数据录入：OCR和NLP技术大幅提升效率
 
-                ### 2. AI创造新的就业机会
-
-                尽管部分岗位被替代，但AI也会创造新的就业机会。数据科学家、AI伦理师、机器学习工程师等新兴职业正在崛起。同时，传统职业也需要升级技能，与AI协作。
-
-                ### 3. 应对策略
-
-                政府和企业应采取积极措施：加强职业培训、完善社会保障体系、推动教育体系改革。只有这样才能在AI时代实现平稳转型。
-
-                ### 结论
-
-                总的来说，AI既是挑战也是机遇。关键在于我们如何应对和适应这场技术革命。未来属于那些能够与AI协作的人。
-
-                *本文观点仅供参考，投资需谨慎*
+                *本文观点仅供参考，ID: $id, 评论数: ${news.commentCount}*
             """.trimIndent()
         )
     }
 
-    private fun createMockImageDetail(id: Int): NewsDetail {
-        val news = newsList.firstOrNull { it.id == id }
-
+    private fun createMockImageDetail(id: Int, news: News): NewsDetail {
         return NewsDetail(
             id = id,
-            type = NewsDetailType.IMAGE,
-            title = news?.title ?: "城市风光：夜幕下的上海外滩",
+            type = news.type.toDetailType(),
+            title = news.title,
             author = getAuthorName(id),
             authorAvatar = getAuthorAvatar(id),
             publishTime = System.currentTimeMillis() - (id * 172800000L),
             viewCount = 8000 + id * 150,
-            commentCount = 150 + id * 15,
+            commentCount = news.commentCount,
             likeCount = 400 + id * 25,
             images = listOf(
                 "https://picsum.photos/800/600?image=${100 + id}",
                 "https://picsum.photos/800/600?image=${200 + id}",
                 "https://picsum.photos/800/600?image=${300 + id}"
             ),
-            content = news?.content ?: "上海外滩的夜景一直以来都是摄影爱好者的热门拍摄地。华灯初上，万国建筑博览群在灯光映照下更显辉煌，与黄浦江对岸的陆家嘴现代建筑群形成鲜明对比。夜幕下的外滩，既有历史的厚重感，又有现代的时尚气息。"
+            content = news.content // 使用动态生成的简短内容作为摘要
         )
     }
 
-    private fun createMockVideoDetail(id: Int): NewsDetail {
-        val news = newsList.firstOrNull { it.id == id }
-
+    private fun createMockVideoDetail(id: Int, news: News): NewsDetail {
         return NewsDetail(
             id = id,
-            type = NewsDetailType.VIDEO,
-            title = news?.title ?: "电动汽车新技术：续航突破1000公里",
+            type = news.type.toDetailType(),
+            title = news.title,
             author = getAuthorName(id),
             authorAvatar = getAuthorAvatar(id),
             publishTime = System.currentTimeMillis() - (id * 259200000L),
             viewCount = 15000 + id * 200,
-            commentCount = 400 + id * 30,
+            commentCount = news.commentCount,
             likeCount = 1200 + id * 40,
-            videoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-            content = news?.content ?: "最新发布的电动汽车搭载了革命性的固态电池技术，实测续航里程突破1000公里，充电时间缩短至15分钟。这款车型采用流线型设计，风阻系数仅为0.21，内饰配备智能座舱系统，支持L4级自动驾驶。专家表示，这标志着电动汽车技术进入新纪元。"
+            videoUrl = news.videoUrl, // 🚨 使用动态生成的 URL
+            content = news.content // 使用动态生成的简短内容作为摘要
         )
     }
 
-    private fun createMockLongImageDetail(id: Int): NewsDetail {
-        val news = newsList.firstOrNull { it.id == id }
-
+    private fun createMockLongImageDetail(id: Int, news: News): NewsDetail {
         return NewsDetail(
             id = id,
-            type = NewsDetailType.LONG_IMAGE,
-            title = news?.title ?: "三款旗舰手机横向对比：摄影性能大比拼",
+            type = news.type.toDetailType(),
+            title = news.title,
             author = getAuthorName(id),
             authorAvatar = getAuthorAvatar(id),
             publishTime = System.currentTimeMillis() - (id * 345600000L),
             viewCount = 11000 + id * 120,
-            commentCount = 280 + id * 18,
+            commentCount = news.commentCount,
             likeCount = 750 + id * 35,
             images = listOf(
                 "https://picsum.photos/400/600?image=${400 + id}",
                 "https://picsum.photos/400/600?image=${500 + id}",
                 "https://picsum.photos/400/600?image=${600 + id}"
             ),
-            content = news?.content ?: "我们对当前市场上三款旗舰手机的摄影功能进行了全面对比测试，包括夜景、人像、广角等不同场景。从左到右分别是：\n\n1. **手机A**：主摄5000万像素，夜景模式表现出色\n2. **手机B**：配备潜望式长焦，10倍混合变焦\n3. **手机C**：超广角镜头畸变控制优秀\n\n经过测试，每款手机在不同场景下各有优势，用户可根据自己的摄影需求选择。"
+            content = news.content
         )
     }
 
-    // 辅助函数 - 与NewsViewModel中的保持一致
+    // =========================================================================
+    // NewsViewModel 辅助函数复制区 (用于动态 ID 生成)
+    // =========================================================================
+
+    // 复制：按顺序创建新闻的辅助函数 (核心 ID 生成逻辑)
+    private fun createNewsWithOrder(
+        order: Int,
+        refreshCount: Int,
+        type: NewsType,
+        isTop: Boolean = false
+    ): News {
+        val newsTemplates = getNewsTemplates()
+        val templateIndex = (order + refreshCount) % newsTemplates.size
+        val (title, source, content) = newsTemplates[templateIndex]
+
+        return when (type) {
+            NewsType.TEXT -> News(
+                id = order + refreshCount * 100,
+                title = getTextTitleDynamic(title, order, refreshCount),
+                content = getTextContentDynamic(content, order, refreshCount),
+                type = type,
+                source = source,
+                commentCount = getCommentCountDynamic(order, refreshCount),
+                publishTime = getPublishTimeDynamic(order, refreshCount),
+                isTop = isTop
+            )
+
+            NewsType.IMAGE -> News(
+                id = order + refreshCount * 100,
+                title = "【图文】$title",
+                content = "$content，详情请查看图片。",
+                type = type,
+                source = source,
+                commentCount = getCommentCountDynamic(order, refreshCount),
+                publishTime = getPublishTimeDynamic(order, refreshCount),
+                imageUrl = getImageUrlDynamic(type, order, refreshCount),
+                isTop = isTop
+            )
+
+            NewsType.VIDEO -> News(
+                id = order + refreshCount * 100,
+                title = "【视频】$title",
+                content = "$content，点击观看详细视频报道。",
+                type = type,
+                source = source,
+                commentCount = getCommentCountDynamic(order, refreshCount),
+                publishTime = getPublishTimeDynamic(order, refreshCount),
+                imageUrl = getImageUrlDynamic(type, order, refreshCount),
+                videoUrl = "https://example.com/video${order % 5 + 1}.mp4",
+                videoDuration = "${order % 4 + 1}:${String.format("%02d", order * 10 % 60)}",
+                isTop = isTop
+            )
+
+            NewsType.LONG_IMAGE -> News(
+                id = order + refreshCount * 100,
+                title = "【长图】$title",
+                content = "$content，一图看懂完整内容。",
+                type = type,
+                source = source,
+                commentCount = getCommentCountDynamic(order, refreshCount),
+                publishTime = getPublishTimeDynamic(order, refreshCount),
+                imageUrl = getImageUrlDynamic(type, order, refreshCount),
+                isTop = isTop
+            )
+        }
+    }
+
+    // 复制：获取新闻模板
     private fun getNewsTemplates(): List<Triple<String, String, String>> {
         return listOf(
             Triple("中国新能源汽车出口量跃居全球第一", "新华社", "今年以来，我国新能源汽车出口持续增长，首次成为全球新能源汽车出口第一大国。"),
@@ -226,14 +269,16 @@ object MockData {
         )
     }
 
-    private fun getTextTitle(baseTitle: String, id: Int): String {
+    // 复制：获取标题（Dynamic 避免冲突）
+    private fun getTextTitleDynamic(baseTitle: String, order: Int, refreshCount: Int): String {
         val prefixes = listOf("快讯", "要闻", "热点", "关注", "最新")
-        val prefix = prefixes[id % prefixes.size]
+        val prefix = prefixes[(order + refreshCount) % prefixes.size]
         return "$prefix：$baseTitle"
     }
 
-    private fun getTextContent(baseContent: String, id: Int): String {
-        val suffix = when (id % 4) {
+    // 复制：获取内容（Dynamic 避免冲突）
+    private fun getTextContentDynamic(baseContent: String, order: Int, refreshCount: Int): String {
+        val suffix = when (order % 4) {
             0 -> "详情请查看后续报道。"
             1 -> "相关部门正在进一步核实信息。"
             2 -> "更多信息将持续更新。"
@@ -242,35 +287,53 @@ object MockData {
         return "$baseContent $suffix"
     }
 
-    private fun getCommentCount(id: Int): Int {
-        val baseCount = when (id % 5) {
+    // 复制：获取评论数（Dynamic 避免冲突）
+    private fun getCommentCountDynamic(order: Int, refreshCount: Int): Int {
+        val baseCount = when (order % 5) {
             0 -> 128
             1 -> 256
             2 -> 342
             3 -> 456
             else -> 567
         }
-        return baseCount + id * 5
+        return baseCount + refreshCount * 10 + order * 5
     }
 
-    private fun getPublishTime(id: Int): String {
-        return when (id % 6) {
+    // 复制：获取发布时间（Dynamic 避免冲突）
+    private fun getPublishTimeDynamic(order: Int, refreshCount: Int): String {
+        return when ((order + refreshCount) % 6) {
             0 -> "刚刚"
-            1 -> "${5 + id % 10}分钟前"
-            2 -> "${1 + id % 5}小时前"
-            3 -> "今天 ${8 + id % 10}:${String.format("%02d", id * 7 % 60)}"
-            4 -> "昨天 ${14 + id % 6}:${String.format("%02d", id * 3 % 60)}"
-            else -> "${1 + id % 7}天前"
+            1 -> "${5 + order % 10}分钟前"
+            2 -> "${1 + order % 5}小时前"
+            3 -> "今天 ${8 + order % 10}:${String.format("%02d", order * 7 % 60)}"
+            4 -> "昨天 ${14 + order % 6}:${String.format("%02d", order * 3 % 60)}"
+            else -> "${1 + order % 7}天前"
         }
     }
 
-    private fun getImageUrl(type: NewsType, id: Int): String {
+    // 复制：获取图片URL（Dynamic 避免冲突）
+    private fun getImageUrlDynamic(type: NewsType, order: Int, refreshCount: Int): String {
         return when (type) {
-            NewsType.IMAGE -> "https://picsum.photos/400/300?random=${id * 100}"
-            NewsType.VIDEO -> "https://picsum.photos/400/250?random=${id * 200}"
-            NewsType.LONG_IMAGE -> "https://picsum.photos/400/600?random=${id * 300}"
+            NewsType.IMAGE -> "https://picsum.photos/400/300?random=${order * 100 + refreshCount}"
+            NewsType.VIDEO -> "https://picsum.photos/400/250?random=${order * 200 + refreshCount}"
+            NewsType.LONG_IMAGE -> "https://picsum.photos/400/600?random=${order * 300 + refreshCount}"
             else -> ""
         }
+    }
+
+    // =========================================================================
+    // 静态 ID 1-8 辅助函数 (用于 init 块)
+    // =========================================================================
+
+    // 创建首页新闻的辅助函数 (用于静态列表)
+    private fun createMockNews(id: Int, type: NewsType, isTop: Boolean): News {
+        // 由于静态 ID 1-8 只需要使用 id 本身，这里我们复用动态逻辑，传入 refreshCount=0
+        return createNewsWithOrder(
+            order = id,
+            refreshCount = 0, // 静态列表使用 refreshCount=0
+            type = type,
+            isTop = isTop
+        )
     }
 
     private fun getAuthorName(id: Int): String {
