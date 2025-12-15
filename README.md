@@ -140,13 +140,13 @@ JUHE_API_KEY=你的聚合数据API密钥
 | **搜索功能** | 实时搜索和搜索结果展示 | ![搜索](gradle/screenshots/interface_search.png) |
 
 ### 新闻详情页展示
-| 新闻类型 | 效果 | 说明 |
-|----------|------|------|
-| **文本新闻** | ![文本新闻详情](gradle/screenshots/NewsDetail_Text.png) | 纯文字内容展示 |
-| **图文新闻** | ![图文新闻详情](gradle/screenshots/NewsDetail_Image.png) | 图文混合展示 |
-| **长图新闻** | ![长图新闻详情](gradle/screenshots/NewsDetail_LongImage.png) | 长图滚动查看 |
-| **视频新闻** | ![视频新闻详情](gradle/screenshots/NewsDetail_Video.png) | 视频内容播放 |
-| **加载失败** | ![加载失败](gradle/screenshots/NewsDetail_Failure.png) | 网络错误处理 |
+| 新闻类型 | 效果 | 说明       |
+|----------|------|----------|
+| **文本新闻** | ![文本新闻详情](gradle/screenshots/NewsDetail_Text.png) | 纯文字内容展示  |
+| **图文新闻** | ![图文新闻详情](gradle/screenshots/NewsDetail_Image.png) | 图文混合展示   |
+| **长图新闻** | ![长图新闻详情](gradle/screenshots/NewsDetail_LongImage.png) | 三张图片混合   |
+| **视频新闻** | ![视频新闻详情](gradle/screenshots/NewsDetail_Video.png) | 视频内容播放   |
+| **加载失败** | ![加载失败](gradle/screenshots/NewsDetail_Failure.png) | 获取新闻错误处理 |
 
 ### 其他功能页面
 | 页面 | 功能 | 截图 |
@@ -205,6 +205,7 @@ JUHE_API_KEY=你的聚合数据API密钥
 ### 待实现功能
 - 🔄 深色模式切换
 - 🔄 上拉加载更多
+- 🔄 新闻详情页文字内容的MarkDown格式渲染
 - 🔄 完整的网络数据接入
 - 🔄 视频播放器集成
 - 🔄 数据库本地缓存
